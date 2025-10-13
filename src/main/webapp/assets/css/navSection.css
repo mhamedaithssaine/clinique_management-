@@ -1,0 +1,46 @@
+/* Navigation Brutalist - Compact */
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: var(--primary);
+    padding: 0.8rem 2rem;
+    z-index: 1000;
+    border-bottom: 5px solid var(--accent);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: -2px;
+    transform: rotate(-2deg);
+}
+
+.nav-links {
+    display: flex;
+    gap: 1rem;
+    list-style: none;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+    border: 3px solid transparent;
+    transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.nav-links a:hover {
+    border: 3px solid var(--accent);
+    transform: translateY(-2px);
+    background: rgba(0, 255, 136, 0.1);
+}
