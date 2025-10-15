@@ -97,7 +97,7 @@
                     </span>
             </div>
             <h3 class="text-gray-500 text-sm font-medium mb-1">Total Utilisateurs</h3>
-            <p class="text-3xl font-bold text-gray-800">1,247</p>
+            <p class="text-3xl font-bold text-gray-800">${totalUser}</p>
         </div>
 
         <!-- Departments -->

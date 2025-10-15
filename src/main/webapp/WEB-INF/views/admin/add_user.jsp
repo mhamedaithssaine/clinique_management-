@@ -279,6 +279,51 @@
                     </div>
                 </div>
             </div>
+            <!-- Section: Informations Médecin -->
+            <div id="doctorFields" class="hidden">
+                <div class="p-6 border-t border-b border-gray-200 bg-gradient-to-r from-purple-50 to-blue-50">
+                    <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+                        <i class="fas fa-user-md mr-3 text-purple-600"></i>
+                        Informations Médecin
+                    </h2>
+                </div>
+                <div class="p-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-id-badge mr-2 text-purple-500"></i>Matricule
+                                <span class="text-red-500 ml-1">*</span>
+                            </label>
+                            <input type="text" name="matricule"
+                                   class="input-field block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
+                                   placeholder="Ex: MED12345" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-user-graduate mr-2 text-purple-500"></i>Titre
+                                <span class="text-red-500 ml-1">*</span>
+                            </label>
+                            <input type="text" name="titre"
+                                   class="input-field block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
+                                   placeholder="Ex: Dr." required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-stethoscope mr-2 text-purple-500"></i>Spécialité
+                                <span class="text-red-500 ml-1">*</span>
+                            </label>
+                            <select name="specialityId"
+                                    class="input-field block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
+                                    required>
+                                <option value="">-- Sélectionner une spécialité --</option>
+                                <c:forEach var="speciality" items="${specialities}">
+                                    <option value="${speciality.id}">${speciality.name}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- Action Buttons -->
             <div class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4 p-8 pt-6 border-t border-gray-200">
@@ -309,21 +354,28 @@
 </div>
 
 <script>
+
+    //for form patient && doctor
     document.addEventListener("DOMContentLoaded", function () {
         const roleSelect = document.getElementById("role");
         const patientFields = document.getElementById("patientFields");
+        const doctorFields = document.getElementById("doctorFields");
 
-        function togglePatientFields() {
+        function toggleFields() {
+            patientFields.classList.add("hidden");
+            doctorFields.classList.add("hidden");
+
             if (roleSelect.value === "PATIENT") {
                 patientFields.classList.remove("hidden");
-            } else {
-                patientFields.classList.add("hidden");
+            } else if (roleSelect.value === "DOCTOR") {
+                doctorFields.classList.remove("hidden");
             }
         }
 
-        roleSelect.addEventListener("change", togglePatientFields);
-        togglePatientFields();
+        roleSelect.addEventListener("change", toggleFields);
+        toggleFields();
     });
+
 </script>
 </body>
 </html>
