@@ -48,7 +48,7 @@
                        class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-all">
                         <i class="fas fa-building mr-2"></i>Départements
                     </a>
-                    <a href="${pageContext.request.contextPath}/admin/specialties"
+                    <a href="${pageContext.request.contextPath}/admin/speciality"
                        class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-all">
                         <i class="fas fa-stethoscope mr-2"></i>Spécialités
                     </a>

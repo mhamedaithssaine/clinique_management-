@@ -1,9 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
 <html>
 <head>
-    <title>Admin Dashboard - Gestion des Utilisateurs</title>
+    <title>Spécialités - Clinique</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -85,8 +84,7 @@
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-slate-50 via-purple-50 to-blue-50 min-h-screen">
-
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
 <!-- Navbar -->
 <nav class="glass-effect sticky top-0 z-50 shadow-sm">
     <div class="container mx-auto px-6">
@@ -106,7 +104,7 @@
                         <i class="fas fa-chart-pie mr-2"></i>Dashboard
                     </a>
                     <a href="${pageContext.request.contextPath}/admin/users"
-                       class="nav-link px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 text-white font-medium shadow-lg">
+                       class="nav-link px-4 py-2 rounded-xl text-gray-700 hover:text-purple-600 font-medium transition-all">
                         <i class="fas fa-users mr-2"></i>Utilisateurs
                     </a>
                     <a href="${pageContext.request.contextPath}/admin/departments"
@@ -114,7 +112,7 @@
                         <i class="fas fa-building mr-2"></i>Départements
                     </a>
                     <a href="${pageContext.request.contextPath}/admin/speciality"
-                       class="nav-link px-4 py-2 rounded-xl text-gray-700 hover:text-purple-600 font-medium transition-all">
+                       class="nav-link px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 text-white font-medium shadow-lg">
                         <i class="fas fa-stethoscope mr-2"></i>Spécialités
                     </a>
                 </div>
@@ -141,27 +139,34 @@
 
 <!-- Main Content -->
 <div class="container mx-auto px-6 py-8">
-    <!-- Page Header -->
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 space-y-4 md:space-y-0">
-        <div>
-            <h1 class="text-4xl font-bold text-gray-800 mb-2">Gestion des Utilisateurs</h1>
-            <p class="text-gray-600 flex items-center">
-                <i class="fas fa-info-circle mr-2 text-purple-500"></i>
-                Gérez tous les comptes utilisateurs de la clinique
-            </p>
-        </div>
-        <a href="${pageContext.request.contextPath}/admin/users/add"
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-4xl font-bold text-gray-800">Gestion des spécialités</h1>
+        <a href="${pageContext.request.contextPath}/admin/speciality/add"
            class="btn-gradient text-white px-6 py-3.5 rounded-xl font-medium shadow-lg flex items-center space-x-2">
-            <i class="fas fa-user-plus"></i>
-            <span>Ajouter un Utilisateur</span>
+            <i class="fas fa-plus"></i>
+            <span>Ajouter une spécialité</span>
         </a>
     </div>
 
-    <!-- Users Table Card -->
+    <c:if test="${not empty error}">
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl mb-6 flex items-center">
+            <i class="fas fa-exclamation-circle mr-3"></i>
+            <span>${error}</span>
+        </div>
+    </c:if>
+
+    <c:if test="${not empty success}">
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl mb-6 flex items-center">
+            <i class="fas fa-check-circle mr-3"></i>
+            <span>${success}</span>
+        </div>
+    </c:if>
+
+    <!-- Tableau des spécialités -->
     <div class="glass-effect rounded-3xl shadow-xl overflow-hidden card-hover">
         <div class="p-6 border-b border-gray-200">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
-                <h2 class="text-xl font-semibold text-gray-800">Liste des Utilisateurs</h2>
+                <h2 class="text-xl font-semibold text-gray-800">Liste des Spécialités</h2>
                 <div class="flex space-x-3">
                     <div class="relative">
                         <input type="text" placeholder="Rechercher..."
@@ -179,70 +184,34 @@
             <table class="min-w-full">
                 <thead class="bg-gradient-to-r from-purple-50 to-blue-50">
                 <tr>
-                    <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                        Utilisateur
-                    </th>
-                    <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                        Email
-                    </th>
-                    <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                        Rôle
-                    </th>
-                    <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                        Statut
-                    </th>
-                    <th scope="col" class="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                        Actions
-                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Code</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Département</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
                 </thead>
                 <tbody class="bg-white/50 divide-y divide-gray-200">
-                <c:forEach var="user" items="${users}">
+                <c:forEach var="specia" items="${speciality}">
                     <tr class="table-row">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${specia.code}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${specia.name}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex items-center">
-                                <div class="flex-shrink-0 h-10 w-10">
-                                    <div class="h-10 w-10 rounded-full bg-gradient-to-br from-purple-400 to-blue-500 flex items-center justify-center text-white font-semibold shadow-md">
-                                            ${user.fullName.substring(0,1)}
-                                    </div>
-                                </div>
-                                <div class="ml-4">
-                                    <div class="text-sm font-semibold text-gray-900">${user.fullName}</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-700">${user.email}</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="badge
-                                ${user.role == 'ADMIN' ? 'bg-red-100 text-red-700' :
-                                  user.role == 'DOCTOR' ? 'bg-blue-100 text-blue-700' :
-                                  user.role == 'PATIENT' ? 'bg-green-100 text-green-700' :
-                                  'bg-yellow-100 text-yellow-700'}">
-                                <i class="fas ${user.role == 'ADMIN' ? 'fa-user-shield' :
-                                  user.role == 'DOCTOR' ? 'fa-user-md' :
-                                  user.role == 'PATIENT' ? 'fa-user' :
-                                  'fa-user-tie'} mr-1"></i>
-                                ${user.role}
+                            <span class="badge bg-purple-100 text-purple-800">
+                                <i class="fas fa-building mr-1"></i>${specia.department.name}
                             </span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="badge ${user.active ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}">
-                                <i class="fas ${user.active ? 'fa-check-circle' : 'fa-times-circle'} mr-1"></i>
-                                ${user.active ? 'Actif' : 'Inactif'}
-                            </span>
-                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">${specia.description}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-center">
                             <div class="flex justify-center space-x-2">
-                                <a href="${pageContext.request.contextPath}/admin/users/edit?id=${user.id}"
+                                <a href="${pageContext.request.contextPath}/admin/speciality/edit?id=${specia.id}"
                                    class="action-btn text-blue-600 hover:bg-blue-50" title="Modifier">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <a href="${pageContext.request.contextPath}/admin/users/delete?id=${user.id}"
+                                <a href="${pageContext.request.contextPath}/admin/speciality/delete?id=${specia.id}"
                                    class="action-btn text-red-600 hover:bg-red-50" title="Supprimer"
-                                   onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')">
-                                    <i class="fas fa-trash-alt"></i>
+                                   onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette spécialité ?')">
+                                    <i class="fas fa-trash"></i>
                                 </a>
                             </div>
                         </td>
@@ -252,43 +221,20 @@
             </table>
         </div>
 
-        <!-- Pagination -->
-        <div class="px-6 py-4 border-t border-gray-200 flex justify-between items-center bg-white/30">
-            <div class="text-sm text-gray-600">
-                Page <span class="font-semibold">${currentPage}</span> sur
-                <span class="font-semibold">${totalPages}</span> —
-                <span class="font-semibold">${totalUsers}</span> utilisateurs au total
+        <!-- Empty state -->
+        <c:if test="${empty speciality}">
+            <div class="text-center py-12">
+                <i class="fas fa-stethoscope text-6xl text-gray-300 mb-4"></i>
+                <h3 class="text-xl font-semibold text-gray-600 mb-2">Aucune spécialité trouvée</h3>
+                <p class="text-gray-500 mb-6">Commencez par ajouter votre première spécialité</p>
+                <a href="${pageContext.request.contextPath}/admin/speciality/add"
+                   class="inline-flex items-center px-6 py-3 btn-gradient text-white font-medium rounded-xl shadow-lg">
+                    <i class="fas fa-plus mr-2"></i>Ajouter une spécialité
+                </a>
             </div>
-
-            <div class="flex space-x-2">
-                <!-- Bouton précédent -->
-                <c:if test="${currentPage > 1}">
-                    <a href="${pageContext.request.contextPath}/admin/users?page=${currentPage - 1}"
-                       class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-white/50 transition-all text-sm font-medium">
-                        <i class="fas fa-chevron-left mr-1"></i>Précédent
-                    </a>
-                </c:if>
-
-                <!-- Numéros de pages -->
-                <c:forEach var="i" begin="1" end="${totalPages}">
-                    <a href="${pageContext.request.contextPath}/admin/users?page=${i}"
-                       class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium
-               ${i == currentPage ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-md' : 'hover:bg-white/50'}">
-                            ${i}
-                    </a>
-                </c:forEach>
-
-                <!-- Bouton suivant -->
-                <c:if test="${currentPage < totalPages}">
-                    <a href="${pageContext.request.contextPath}/admin/users?page=${currentPage + 1}"
-                       class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-white/50 transition-all text-sm font-medium">
-                        Suivant<i class="fas fa-chevron-right ml-1"></i>
-                    </a>
-                </c:if>
-            </div>
-        </div>
+        </c:if>
     </div>
+    
 </div>
-
 </body>
 </html>

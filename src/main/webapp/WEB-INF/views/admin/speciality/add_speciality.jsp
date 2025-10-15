@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
-    <title>Éditer un département - Clinique</title>
+    <title>Ajouter une spécialité - Clinique</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -91,11 +91,11 @@
                         <i class="fas fa-users mr-2"></i>Utilisateurs
                     </a>
                     <a href="${pageContext.request.contextPath}/admin/departments"
-                       class="nav-link px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 text-white font-medium shadow-lg">
+                       class="nav-link px-4 py-2 rounded-xl text-gray-700 hover:text-purple-600 font-medium transition-all">
                         <i class="fas fa-building mr-2"></i>Départements
                     </a>
                     <a href="${pageContext.request.contextPath}/admin/specialties"
-                       class="nav-link px-4 py-2 rounded-xl text-gray-700 hover:text-purple-600 font-medium transition-all">
+                       class="nav-link px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 text-white font-medium shadow-lg">
                         <i class="fas fa-stethoscope mr-2"></i>Spécialités
                     </a>
                 </div>
@@ -124,15 +124,15 @@
 <div class="container mx-auto px-6 py-8">
     <!-- Breadcrumb -->
     <div class="flex items-center space-x-2 text-sm text-gray-600 mb-6">
-        <a href="${pageContext.request.contextPath}/admin/departments" class="hover:text-purple-600 transition-colors">
-            <i class="fas fa-building mr-1"></i>Départements
+        <a href="${pageContext.request.contextPath}/admin/specialties" class="hover:text-purple-600 transition-colors">
+            <i class="fas fa-stethoscope mr-1"></i>Spécialités
         </a>
         <i class="fas fa-chevron-right text-xs"></i>
-        <span class="text-gray-800 font-medium">Éditer le département</span>
+        <span class="text-gray-800 font-medium">Ajouter une spécialité</span>
     </div>
 
     <div class="flex justify-between items-center mb-8">
-        <h1 class="text-4xl font-bold text-gray-800">Éditer le département</h1>
+        <h1 class="text-4xl font-bold text-gray-800">Ajouter une spécialité</h1>
     </div>
 
     <c:if test="${not empty error}">
@@ -146,43 +146,41 @@
     <div class="glass-effect rounded-3xl shadow-xl overflow-hidden card-hover max-w-3xl mx-auto">
         <div class="p-6 border-b border-gray-200 bg-gradient-to-r from-purple-50 to-blue-50">
             <h2 class="text-xl font-semibold text-gray-800 flex items-center">
-                <i class="fas fa-edit mr-3 text-purple-600"></i>
-                Informations du département
+                <i class="fas fa-plus-circle mr-3 text-purple-600"></i>
+                Nouvelle spécialité
             </h2>
         </div>
 
-        <form action="${pageContext.request.contextPath}/admin/departments/edit" method="post" class="p-8">
-            <input type="hidden" name="id" value="${department.id}">
-
+        <form action="${pageContext.request.contextPath}/admin/speciality/add" method="post" class="p-8">
             <div class="space-y-6">
                 <!-- Code Field -->
                 <div>
                     <label for="code" class="block text-sm font-medium text-gray-700 mb-2">
-                        <i class="fas fa-hashtag mr-2 text-purple-500"></i>Code du département
+                        <i class="fas fa-hashtag mr-2 text-purple-500"></i>Code de la spécialité
+                        <span class="text-red-500 ml-1">*</span>
                     </label>
                     <input type="text"
                            id="code"
                            name="code"
-                           value="${department.code}"
                            required
                            class="input-field block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
-                           placeholder="Ex: CARD">
-                    <p class="mt-1 text-xs text-gray-500">Code unique pour identifier le département</p>
+                           placeholder="Ex: CARDIO">
+                    <p class="mt-1 text-xs text-gray-500">Code unique pour identifier la spécialité</p>
                 </div>
 
                 <!-- Name Field -->
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-                        <i class="fas fa-hospital mr-2 text-purple-500"></i>Nom du département
+                        <i class="fas fa-stethoscope mr-2 text-purple-500"></i>Nom de la spécialité
+                        <span class="text-red-500 ml-1">*</span>
                     </label>
                     <input type="text"
                            id="name"
                            name="name"
-                           value="${department.name}"
                            required
                            class="input-field block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
                            placeholder="Ex: Cardiologie">
-                    <p class="mt-1 text-xs text-gray-500">Nom complet du département</p>
+                    <p class="mt-1 text-xs text-gray-500">Nom complet de la spécialité</p>
                 </div>
 
                 <!-- Description Field -->
@@ -194,22 +192,40 @@
                               name="description"
                               rows="4"
                               class="input-field block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all resize-none"
-                              placeholder="Décrivez les activités et services du département...">${department.description}</textarea>
-                    <p class="mt-1 text-xs text-gray-500">Informations détaillées sur le département (optionnel)</p>
+                              placeholder="Décrivez les domaines d'intervention de la spécialité..."></textarea>
+                    <p class="mt-1 text-xs text-gray-500">Informations détaillées sur la spécialité (optionnel)</p>
+                </div>
+
+                <!-- Department Field -->
+                <div>
+                    <label for="departmentId" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-building mr-2 text-purple-500"></i>Département
+                        <span class="text-red-500 ml-1">*</span>
+                    </label>
+                    <select id="departmentId"
+                            name="departmentId"
+                            required
+                            class="input-field block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all">
+                        <option value="">Sélectionner un département</option>
+                        <c:forEach var="department" items="${departments}">
+                            <option value="${department.id}">${department.name}</option>
+                        </c:forEach>
+                    </select>
+                    <p class="mt-1 text-xs text-gray-500">Département auquel appartient cette spécialité</p>
                 </div>
             </div>
 
             <!-- Action Buttons -->
             <div class="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4 mt-8 pt-6 border-t border-gray-200">
-                <a href="${pageContext.request.contextPath}/admin/departments"
+                <a href="${pageContext.request.contextPath}/admin/speciality"
                    class="px-6 py-3 border border-gray-300 rounded-xl text-gray-700 font-medium hover:bg-white/50 transition-all text-center flex items-center justify-center space-x-2">
                     <i class="fas fa-times"></i>
                     <span>Annuler</span>
                 </a>
                 <button type="submit"
                         class="btn-gradient text-white px-6 py-3 rounded-xl font-medium shadow-lg flex items-center justify-center space-x-2">
-                    <i class="fas fa-save"></i>
-                    <span>Enregistrer les modifications</span>
+                    <i class="fas fa-check"></i>
+                    <span>Créer la spécialité</span>
                 </button>
             </div>
         </form>
@@ -221,7 +237,7 @@
             <i class="fas fa-info-circle text-blue-500 mt-0.5"></i>
             <div class="text-sm text-blue-800">
                 <p class="font-medium mb-1">Conseil</p>
-                <p>Assurez-vous que le code du département est unique et facilement identifiable. Il sera utilisé dans toute l'application.</p>
+                <p>Assurez-vous de sélectionner le département approprié. La spécialité sera rattachée à ce département dans toute l'application.</p>
             </div>
         </div>
     </div>
