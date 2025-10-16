@@ -33,4 +33,8 @@ public class DepartmentService {
         return departmentRepository.findAll();
     }
 
+    public long getTotalDepartment(){
+        return departmentRepository.getTotalDepartment();
+    }
+
 }

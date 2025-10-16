@@ -19,5 +19,6 @@
         <mapping class="com.clinique.model.Department"/>
         <mapping class="com.clinique.model.Appointment"/>
         <mapping class="com.clinique.model.Availability"/>
+        <mapping class="com.clinique.model.Staff"/>
     </session-factory>
 </hibernate-configuration>

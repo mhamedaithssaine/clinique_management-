@@ -69,4 +69,11 @@ public class DepartmentRepository {
         }
     }
 
+    public long getTotalDepartment(){
+        try (Session session =HibernateUtil.getSessionFactory().openSession()){
+            Query<Long> query = session.createQuery("SELECT COUNT(d.id) FROM Department d", Long.class);
+            return query.uniqueResult();
+        }
+    }
+
 }

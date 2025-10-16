@@ -194,10 +194,10 @@
                         <select id="role" name="role" required
                                 class="input-field block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all">
                             <option value="">-- Sélectionner un rôle --</option>
-                            <option value="ADMIN">Administrateur</option>
-                            <option value="DOCTOR">Médecin</option>
+                            <option value="ADMIN">Admin</option>
+                            <option value="DOCTOR">Doctor</option>
                             <option value="PATIENT">Patient</option>
-                            <option value="STAFF">Personnel</option>
+                            <option value="STAFF">Staff</option>
                         </select>
                     </div>
                 </div>
@@ -296,7 +296,7 @@
                             </label>
                             <input type="text" name="matricule"
                                    class="input-field block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
-                                   placeholder="Ex: MED12345" required>
+                                   placeholder="Ex: MED12345" >
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">
@@ -305,7 +305,7 @@
                             </label>
                             <input type="text" name="titre"
                                    class="input-field block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
-                                   placeholder="Ex: Dr." required>
+                                   placeholder="Ex: Dr." >
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">
@@ -314,7 +314,7 @@
                             </label>
                             <select name="specialityId"
                                     class="input-field block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
-                                    required>
+                                    >
                                 <option value="">-- Sélectionner une spécialité --</option>
                                 <c:forEach var="speciality" items="${specialities}">
                                     <option value="${speciality.id}">${speciality.name}</option>

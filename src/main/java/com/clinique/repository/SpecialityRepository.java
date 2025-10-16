@@ -68,4 +68,11 @@ public class SpecialityRepository {
         }
     }
 
+    public long getTotalSpecialities(){
+        try (Session session =HibernateUtil.getSessionFactory().openSession()){
+            Query<Long> query = session.createQuery("SELECT COUNT(s.id) FROM Speciality s", Long.class);
+             return query.uniqueResult();
+        }
+    }
+
 }

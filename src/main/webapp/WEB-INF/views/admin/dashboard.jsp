@@ -111,7 +111,7 @@
                     </span>
             </div>
             <h3 class="text-gray-500 text-sm font-medium mb-1">Départements</h3>
-            <p class="text-3xl font-bold text-gray-800">24</p>
+            <p class="text-3xl font-bold text-gray-800">${totalDepartment}</p>
         </div>
 
         <!-- Specialties -->
@@ -125,7 +125,7 @@
                     </span>
             </div>
             <h3 class="text-gray-500 text-sm font-medium mb-1">Spécialités</h3>
-            <p class="text-3xl font-bold text-gray-800">42</p>
+            <p class="text-3xl font-bold text-gray-800">${totalSpeciality}</p>
         </div>
 
         <!-- Active Sessions -->
@@ -188,7 +188,7 @@
                 </div>
                 <h3 class="text-2xl font-bold text-gray-800 mb-3">Spécialités</h3>
                 <p class="text-gray-600 mb-6">Gérer les spécialités médicales et leurs configurations</p>
-                <a href="${pageContext.request.contextPath}/admin/specialties"
+                <a href="${pageContext.request.contextPath}/admin/speciality"
                    class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-xl hover:shadow-lg transition-all">
                     Gérer les spécialités
                     <i class="fas fa-arrow-right ml-2"></i>

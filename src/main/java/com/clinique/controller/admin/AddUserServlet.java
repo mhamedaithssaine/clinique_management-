@@ -1,15 +1,9 @@
 package com.clinique.controller.admin;
-import com.clinique.model.Doctor;
-import com.clinique.model.Patient;
-import com.clinique.model.Speciality;
-import com.clinique.model.User;
+import com.clinique.model.*;
 import com.clinique.model.type.BloodeType;
 import com.clinique.model.type.Gender;
 import com.clinique.model.type.Role;
-import com.clinique.service.DoctorService;
-import com.clinique.service.PatientService;
-import com.clinique.service.SpecialityService;
-import com.clinique.service.UserService;
+import com.clinique.service.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -26,12 +20,14 @@ public class AddUserServlet extends HttpServlet {
     private final PatientService patientService;
     private final SpecialityService specialityService;
     private final DoctorService doctorService;
+    private final StaffService staffService;
 
     public AddUserServlet() {
         this.userService = new UserService();
         this.patientService = new PatientService();
         this.specialityService = new SpecialityService();
         this.doctorService = new DoctorService();
+        this.staffService = new StaffService();
     }
 
     @Override
@@ -49,7 +45,6 @@ public class AddUserServlet extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         Role role = Role.valueOf(request.getParameter("role"));
-
         try {
             if(role == Role.PATIENT){
                 String cin = request.getParameter("cin");
@@ -65,13 +60,13 @@ public class AddUserServlet extends HttpServlet {
                 String titre = request.getParameter("titre");
                 UUID specialityId = UUID.fromString(request.getParameter("specialityId"));
                 Speciality speciality = specialityService.getSpecialityById(specialityId);
-
-
-
-                System.out.println("hhhhhhhh"+matricule+"titre"+titre+"spid"+specialityId);
                 Doctor doctor = new Doctor(fullName,email,password,matricule,titre,speciality);
                 doctorService.RegisterDoctor(doctor);
 
+            } else if (role == Role.STAFF) {
+                Staff staff = new Staff(fullName, email, password);
+                System.out.println("THIS IS THE ROLE : "+role);
+                staffService.RegisterStaff(staff);
             } else {
                 User user = new User(fullName, email, password, role);
                 userService.registerUser(user);

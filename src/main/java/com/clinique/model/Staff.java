@@ -10,7 +10,10 @@ import jakarta.persistence.Table;
 @Table(name = "staff")
 @PrimaryKeyJoinColumn(name = "user_id")
 public class Staff extends User {
-    public Staff() { super();
+
+
+    public Staff() {
+        super();
         setRole(Role.STAFF);
     }
 

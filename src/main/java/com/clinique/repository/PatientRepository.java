@@ -61,4 +61,11 @@ public class PatientRepository {
             return session.find(Patient.class, user_id);
         }
     }
+
+    public long getTotalPatient(){
+        try (Session session =HibernateUtil.getSessionFactory().openSession()){
+            Query<Long> query = session.createQuery("SELECT COUNT(p.id) FROM Patient p", Long.class);
+            return query.uniqueResult();
+        }
+    }
 }

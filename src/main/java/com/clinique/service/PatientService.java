@@ -31,4 +31,10 @@ public class PatientService {
     public Patient findById(UUID id){
         return patientRepository.findById(id);
     }
+
+    public long getTotalPatient(){
+        return patientRepository.getTotalPatient();
+    }
+
+
 }

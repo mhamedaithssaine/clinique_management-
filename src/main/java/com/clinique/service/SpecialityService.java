@@ -34,5 +34,8 @@ public class SpecialityService {
         specialityRepository.delete(id);
     }
 
+    public long getTotalSpecialities(){
+        return specialityRepository.getTotalSpecialities();
+    }
 
 }

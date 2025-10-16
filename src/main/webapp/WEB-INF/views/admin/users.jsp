@@ -156,7 +156,68 @@
             <span>Ajouter un Utilisateur</span>
         </a>
     </div>
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Total Doctors -->
+            <div class="stat-card bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-user-md text-white text-2xl"></i>
+                    </div>
+                    <span class="text-blue-500 text-sm font-semibold bg-blue-50 px-3 py-1 rounded-full">
+                    <i class="fas fa-stethoscope mr-1"></i>
+                </span>
+                </div>
+                <h3 class="text-gray-500 text-sm font-medium mb-1">Médecins</h3>
+                <p class="text-3xl font-bold text-gray-800">${totalDoctors}</p>
+                <p class="text-xs text-gray-500 mt-2">Docteurs actifs</p>
+            </div>
 
+            <!-- Total Patients -->
+            <div class="stat-card bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-14 h-14 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-user text-white text-2xl"></i>
+                    </div>
+                    <span class="text-green-500 text-sm font-semibold bg-green-50 px-3 py-1 rounded-full">
+                    <i class="fas fa-heart mr-1"></i>
+                </span>
+                </div>
+                <h3 class="text-gray-500 text-sm font-medium mb-1">Patients</h3>
+                <p class="text-3xl font-bold text-gray-800">${totalPatients}</p>
+                <p class="text-xs text-gray-500 mt-2">Patients enregistrés</p>
+            </div>
+
+            <!-- Total Staff -->
+            <div class="stat-card bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-user-tie text-white text-2xl"></i>
+                    </div>
+                    <span class="text-purple-500 text-sm font-semibold bg-purple-50 px-3 py-1 rounded-full">
+                    <i class="fas fa-briefcase mr-1"></i>
+                </span>
+                </div>
+                <h3 class="text-gray-500 text-sm font-medium mb-1">Personnel</h3>
+                <p class="text-3xl font-bold text-gray-800">${totalStaff}</p>
+                <p class="text-xs text-gray-500 mt-2">Membres du personnel</p>
+            </div>
+
+            <!-- Total Users -->
+            <div class="stat-card bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-14 h-14 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-users text-white text-2xl"></i>
+                    </div>
+                    <span class="text-green-500 text-sm font-semibold bg-green-50 px-3 py-1 rounded-full">
+                    <i class="fas fa-arrow-up mr-1"></i>Total
+                </span>
+                </div>
+                <h3 class="text-gray-500 text-sm font-medium mb-1">Total Utilisateurs</h3>
+                <p class="text-3xl font-bold text-gray-800">${totalUsers}</p>
+                <p class="text-xs text-gray-500 mt-2">Tous les utilisateurs</p>
+            </div>
+        </div>
     <!-- Users Table Card -->
     <div class="glass-effect rounded-3xl shadow-xl overflow-hidden card-hover">
         <div class="p-6 border-b border-gray-200">
