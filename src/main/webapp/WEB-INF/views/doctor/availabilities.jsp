@@ -67,7 +67,7 @@
                 transform: translateY(0);
             }
         }
-        .delete-modal {
+        .delete-modal, .action-modal {
             animation: zoomIn 0.2s ease-out;
         }
         @keyframes zoomIn {
@@ -239,6 +239,18 @@
         </div>
     </c:if>
 
+    <c:if test="${param.success == 'updated'}">
+        <div class="bg-green-50 border-l-4 border-green-500 text-green-700 px-6 py-4 rounded-xl mb-6 flex items-center shadow-sm">
+            <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                <i class="fas fa-check text-green-600 text-lg"></i>
+            </div>
+            <div>
+                <p class="font-semibold">Succès !</p>
+                <p class="text-sm">Disponibilité modifiée avec succès</p>
+            </div>
+        </div>
+    </c:if>
+
     <c:if test="${param.success == 'true'}">
         <div class="bg-green-50 border-l-4 border-green-500 text-green-700 px-6 py-4 rounded-xl mb-6 flex items-center shadow-sm">
             <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-4">
@@ -308,11 +320,11 @@
     </div>
 </div>
 
-<!-- Add Availability Modal -->
+<!-- Add/Edit Availability Modal -->
 <div id="addAvailabilityModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 modal-backdrop">
     <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto modal-content">
         <div class="flex items-center justify-between mb-6">
-            <h2 class="text-2xl font-bold text-gray-800 flex items-center">
+            <h2 class="text-2xl font-bold text-gray-800 flex items-center" id="modalTitle">
                 <div class="w-10 h-10 bg-gradient-to-br from-purple-100 to-blue-100 rounded-xl flex items-center justify-center mr-3">
                     <i class="fas fa-calendar-plus text-purple-600"></i>
                 </div>
@@ -429,13 +441,40 @@
                         class="px-6 py-3 border-2 border-gray-300 rounded-xl text-gray-700 font-semibold hover:bg-gray-50 transition-all">
                     Annuler
                 </button>
-                <button type="submit"
+                <button type="submit" id="submitButton"
                         class="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
                     <i class="fas fa-save mr-2"></i>
                     Enregistrer
                 </button>
             </div>
         </form>
+    </div>
+</div>
+
+<!-- Action Modal (Edit/Delete) -->
+<div id="actionModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 modal-backdrop">
+    <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 action-modal">
+        <div class="w-16 h-16 bg-gradient-to-br from-purple-100 to-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-calendar-check text-purple-600 text-2xl"></i>
+        </div>
+        <h3 class="text-2xl font-bold text-gray-800 text-center mb-2">Gérer la disponibilité</h3>
+        <p class="text-gray-600 text-center mb-6" id="actionMessage">
+            Que souhaitez-vous faire avec cette disponibilité ?
+        </p>
+        <div class="flex space-x-3">
+            <button onclick="closeActionModal()"
+                    class="flex-1 px-6 py-3 border-2 border-gray-300 rounded-xl text-gray-700 font-semibold hover:bg-gray-50 transition-all">
+                Annuler
+            </button>
+            <button id="editButton"
+                    class="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all">
+                <i class="fas fa-edit mr-2"></i>Modifier
+            </button>
+            <button id="deleteButton"
+                    class="flex-1 px-6 py-3 bg-gradient-to-r from-red-600 to-red-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all">
+                <i class="fas fa-trash mr-2"></i>Supprimer
+            </button>
+        </div>
     </div>
 </div>
 
@@ -462,7 +501,6 @@
     </div>
 </div>
 
-<!-- Initialize availabilities data for JavaScript -->
 <script>
     // Parse availabilities from JSP and pass to external script
     const availabilitiesData = [];
@@ -482,12 +520,9 @@
     </c:forEach>
 </script>
 
-<!-- Include external JavaScript file -->
 <script src="${pageContext.request.contextPath}/assets/js/hook.js"></script>
 
-<!-- Initialize after external script loads -->
 <script>
-    // Initialize availabilities with data from JSP
     initAvailabilities(availabilitiesData);
 </script>
 

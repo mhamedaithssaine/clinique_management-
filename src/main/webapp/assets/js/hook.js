@@ -1,5 +1,6 @@
 // Global variables
 let deleteAvailabilityId = null;
+let editAvailabilityId = null;
 let currentDate = new Date();
 let availabilities = [];
 
@@ -18,6 +19,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalError = document.getElementById('modalError');
     const modalErrorText = document.getElementById('modalErrorText');
     const modalErrorTitle = document.getElementById('modalErrorTitle');
+    const modalTitle = document.getElementById('modalTitle');
+    const submitButton = document.getElementById('submitButton');
 
     const today = new Date().toISOString().split('T')[0];
     startDateInput.min = today;
@@ -175,6 +178,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         if (!hasError) {
+            // Update form action based on edit mode
+            if (editAvailabilityId) {
+                form.action = `${form.action}/edit?id=${editAvailabilityId}`;
+            }
             form.submit();
         }
     });
@@ -280,13 +287,49 @@ function createDayElement(dayNumber, isOtherMonth, date, isToday = false) {
             slotEl.innerHTML = `${icon} ${avail.startTime}-${avail.endTime}`;
             slotEl.onclick = (e) => {
                 e.stopPropagation();
-                showDeleteModal(avail);
+                showActionModal(avail);
             };
             dayEl.appendChild(slotEl);
         }
     });
 
     return dayEl;
+}
+
+function showActionModal(availability) {
+    const modal = document.getElementById('actionModal');
+    const messageEl = document.getElementById('actionMessage');
+
+    if (availability.recurring) {
+        messageEl.innerHTML = `
+            <span class="block mb-2">Cette disponibilité est <strong>récurrente</strong>.</span>
+            <span class="block text-sm">${getDayName(availability.dayOfWeek)} de ${availability.startTime} à ${availability.endTime}</span>
+        `;
+    } else {
+        messageEl.innerHTML = `
+            <span class="block mb-2">Disponibilité ponctuelle</span>
+            <span class="block text-sm">${getDayName(availability.dayOfWeek)} de ${availability.startTime} à ${availability.endTime}</span>
+            <span class="block text-sm text-gray-500 mt-1">Du ${formatDate(availability.startDate)} au ${formatDate(availability.endDate)}</span>
+        `;
+    }
+
+    // Set up buttons
+    document.getElementById('editButton').onclick = () => {
+        closeActionModal();
+        openEditAvailabilityModal(availability);
+    };
+
+    document.getElementById('deleteButton').onclick = () => {
+        closeActionModal();
+        showDeleteModal(availability);
+    };
+
+    openActionModal();
+}
+
+function getDayName(dayOfWeek) {
+    const days = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+    return days[dayOfWeek] || days[0];
 }
 
 function showDeleteModal(availability) {
@@ -306,6 +349,32 @@ function showDeleteModal(availability) {
     }
 
     openDeleteModal();
+}
+
+function openEditAvailabilityModal(availability) {
+    editAvailabilityId = availability.id;
+
+    // Update modal title and button
+    document.getElementById('modalTitle').textContent = 'Modifier la disponibilité';
+    document.getElementById('submitButton').innerHTML = '<i class="fas fa-save mr-2"></i> Modifier';
+
+    // Fill form with existing data
+    document.getElementById('dayOfWeek').value = availability.dayOfWeek;
+    document.getElementById('startTime').value = availability.startTime;
+    document.getElementById('endTime').value = availability.endTime;
+    document.getElementById('isRecurring').checked = availability.recurring;
+
+    if (!availability.recurring) {
+        document.getElementById('startDate').value = availability.startDate;
+        document.getElementById('endDate').value = availability.endDate;
+    }
+
+    // Trigger change event to update UI
+    const event = new Event('change');
+    document.getElementById('isRecurring').dispatchEvent(event);
+
+    // Open modal
+    openAddAvailabilityModal();
 }
 
 function formatDate(dateStr) {
@@ -352,6 +421,11 @@ function closeAddAvailabilityModal() {
     document.getElementById('availabilityForm').reset();
     document.getElementById('isRecurring').checked = true;
 
+    // Reset modal to add mode
+    document.getElementById('modalTitle').textContent = 'Ajouter une disponibilité';
+    document.getElementById('submitButton').innerHTML = '<i class="fas fa-save mr-2"></i> Enregistrer';
+    editAvailabilityId = null;
+
     const modalError = document.getElementById('modalError');
     if (modalError) modalError.classList.add('hidden');
 
@@ -362,6 +436,18 @@ function closeAddAvailabilityModal() {
 
     const event = new Event('change');
     document.getElementById('isRecurring').dispatchEvent(event);
+}
+
+function openActionModal() {
+    const modal = document.getElementById('actionModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function closeActionModal() {
+    const modal = document.getElementById('actionModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
 }
 
 function openDeleteModal() {
@@ -405,6 +491,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    document.getElementById('actionModal')?.addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeActionModal();
+        }
+    });
+
     document.getElementById('deleteModal')?.addEventListener('click', function(e) {
         if (e.target === this) {
             closeDeleteModal();
@@ -414,6 +506,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             closeAddAvailabilityModal();
+            closeActionModal();
             closeDeleteModal();
         }
     });
