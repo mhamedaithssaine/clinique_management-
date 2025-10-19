@@ -12,7 +12,6 @@ import java.util.UUID;
 public class SpecialityRepository {
     public void save(Speciality speciality) {
         Transaction transaction = null;
-
         try(Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             session.persist(speciality);

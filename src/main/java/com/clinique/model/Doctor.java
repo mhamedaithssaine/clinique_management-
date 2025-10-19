@@ -16,12 +16,12 @@ public class Doctor extends User{
     @Column(nullable = false , length = 20)
     private String titre ;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "speciality_id", nullable = false)
     private Speciality speciality;
 
 
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Availability> availabilities = new ArrayList<>();
 
 

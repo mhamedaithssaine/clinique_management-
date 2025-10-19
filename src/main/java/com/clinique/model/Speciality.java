@@ -25,7 +25,7 @@ public class Speciality {
     @JoinColumn(name = "department_id", nullable = false)
     private Department department;
 
-    @OneToMany(mappedBy = "speciality")
+    @OneToMany(mappedBy = "speciality" , fetch = FetchType.EAGER)
     private List<Doctor> doctors = new ArrayList<>();
 
     public Speciality() {}
