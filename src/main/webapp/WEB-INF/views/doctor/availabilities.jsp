@@ -7,7 +7,6 @@
     <meta charset="UTF-8">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         * {
@@ -35,10 +34,6 @@
         .nav-link:hover::before {
             width: 100%;
         }
-        #calendar {
-            max-width: 100%;
-            margin: 0;
-        }
         .error-message {
             animation: shake 0.3s;
         }
@@ -47,47 +42,9 @@
             25% { transform: translateX(-10px); }
             75% { transform: translateX(10px); }
         }
-        .fc-event {
-            cursor: pointer;
-            border: none !important;
-            border-radius: 8px !important;
-        }
         .validation-error {
             border-color: #ef4444 !important;
             box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
-        }
-        .fc-time-grid-event .fc-content {
-            padding: 4px 8px;
-        }
-        .fc .fc-button-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-            border: none !important;
-            border-radius: 8px !important;
-            padding: 8px 16px !important;
-            font-weight: 600 !important;
-        }
-        .fc .fc-button-primary:hover {
-            background: linear-gradient(135deg, #5568d3 0%, #653a8e 100%) !important;
-            transform: translateY(-1px);
-        }
-        .fc .fc-toolbar-title {
-            font-size: 1.5rem !important;
-            font-weight: 700 !important;
-            color: #1f2937 !important;
-        }
-        .fc .fc-col-header-cell {
-            background: #f9fafb !important;
-            padding: 12px 0 !important;
-            font-weight: 600 !important;
-            color: #6b7280 !important;
-        }
-        .fc .fc-scrollgrid {
-            border: none !important;
-            border-radius: 12px !important;
-            overflow: hidden;
-        }
-        .fc-theme-standard td, .fc-theme-standard th {
-            border-color: #e5e7eb !important;
         }
         .modal-backdrop {
             backdrop-filter: blur(4px);
@@ -122,6 +79,80 @@
                 opacity: 1;
                 transform: scale(1);
             }
+        }
+
+        /* Calendar Styles */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+        .calendar-header {
+            font-weight: 600;
+            text-align: center;
+            padding: 12px;
+            color: #6b7280;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .calendar-day {
+            min-height: 100px;
+            padding: 8px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: white;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .calendar-day:hover {
+            border-color: #8b5cf6;
+            box-shadow: 0 2px 8px rgba(139, 92, 246, 0.15);
+        }
+        .calendar-day.other-month {
+            background: #f9fafb;
+            opacity: 0.5;
+        }
+        .calendar-day.today {
+            border: 2px solid #8b5cf6;
+            background: #faf5ff;
+        }
+        .day-number {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 4px;
+            font-size: 0.875rem;
+        }
+        .availability-slot {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .availability-slot:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+        }
+        .availability-slot.recurring {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        }
+        .availability-slot.recurring:hover {
+            box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+        }
+        .view-toggle button {
+            transition: all 0.2s ease;
+        }
+        .view-toggle button.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
         }
     </style>
 </head>
@@ -195,8 +226,20 @@
         </button>
     </div>
 
-    <!-- Success Message -->
-    <c:if test="${param.success != null}">
+    <!-- Messages -->
+    <c:if test="${param.success == 'deleted'}">
+        <div class="bg-green-50 border-l-4 border-green-500 text-green-700 px-6 py-4 rounded-xl mb-6 flex items-center shadow-sm">
+            <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                <i class="fas fa-check text-green-600 text-lg"></i>
+            </div>
+            <div>
+                <p class="font-semibold">Succès !</p>
+                <p class="text-sm">Disponibilité supprimée avec succès</p>
+            </div>
+        </div>
+    </c:if>
+
+    <c:if test="${param.success == 'true'}">
         <div class="bg-green-50 border-l-4 border-green-500 text-green-700 px-6 py-4 rounded-xl mb-6 flex items-center shadow-sm">
             <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-4">
                 <i class="fas fa-check text-green-600 text-lg"></i>
@@ -208,22 +251,60 @@
         </div>
     </c:if>
 
-    <!-- Error Message -->
-    <c:if test="${not empty error}">
+    <c:if test="${param.error != null}">
         <div class="bg-red-50 border-l-4 border-red-500 text-red-700 px-6 py-4 rounded-xl mb-6 flex items-center shadow-sm error-message">
             <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mr-4">
                 <i class="fas fa-exclamation-circle text-red-600 text-lg"></i>
             </div>
             <div>
                 <p class="font-semibold">Erreur</p>
-                <p class="text-sm">${error}</p>
+                <p class="text-sm">Une erreur est survenue</p>
             </div>
         </div>
     </c:if>
 
     <!-- Calendar Card -->
     <div class="bg-white rounded-2xl shadow-xl p-6 border border-gray-100">
-        <div id="calendar"></div>
+        <!-- Calendar Header -->
+        <div class="flex justify-between items-center mb-6">
+            <div class="flex items-center space-x-4">
+                <button onclick="previousMonth()" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                    <i class="fas fa-chevron-left text-gray-600"></i>
+                </button>
+                <h2 class="text-2xl font-bold text-gray-800" id="currentMonth"></h2>
+                <button onclick="nextMonth()" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                    <i class="fas fa-chevron-right text-gray-600"></i>
+                </button>
+            </div>
+            <button onclick="goToToday()" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-medium hover:shadow-lg transition-all">
+                Aujourd'hui
+            </button>
+        </div>
+
+        <!-- Legend -->
+        <div class="flex items-center gap-6 mb-6 p-4 bg-gray-50 rounded-xl">
+            <div class="flex items-center gap-2">
+                <div class="w-4 h-4 rounded" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);"></div>
+                <span class="text-sm text-gray-700">Disponibilité ponctuelle</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <div class="w-4 h-4 rounded" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);"></div>
+                <span class="text-sm text-gray-700">Disponibilité récurrente</span>
+            </div>
+        </div>
+
+        <!-- Calendar Grid -->
+        <div class="calendar-grid" id="calendarGrid">
+            <!-- Headers -->
+            <div class="calendar-header">Lun</div>
+            <div class="calendar-header">Mar</div>
+            <div class="calendar-header">Mer</div>
+            <div class="calendar-header">Jeu</div>
+            <div class="calendar-header">Ven</div>
+            <div class="calendar-header">Sam</div>
+            <div class="calendar-header">Dim</div>
+            <!-- Days will be inserted here by JavaScript -->
+        </div>
     </div>
 </div>
 
@@ -242,7 +323,6 @@
             </button>
         </div>
 
-        <!-- Modal Error -->
         <div id="modalError" class="hidden bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded-xl mb-4 error-message">
             <div class="flex items-center">
                 <i class="fas fa-exclamation-circle mr-2"></i>
@@ -255,7 +335,6 @@
 
         <form action="${pageContext.request.contextPath}/doctor/availabilities" method="post" id="availabilityForm" novalidate>
             <div class="space-y-5">
-                <!-- Day of Week -->
                 <div>
                     <label for="dayOfWeek" class="block text-sm font-semibold text-gray-700 mb-2">
                         Jour de la semaine <span class="text-red-500">*</span>
@@ -277,7 +356,6 @@
                     <p class="text-xs text-red-500 mt-1 hidden" id="dayOfWeekError">Veuillez sélectionner un jour</p>
                 </div>
 
-                <!-- Time Range -->
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label for="startTime" class="block text-sm font-semibold text-gray-700 mb-2">
@@ -304,7 +382,6 @@
                 </div>
                 <p class="text-xs text-red-500 mt-1 hidden" id="timeOrderError">L'heure de fin doit être après l'heure de début</p>
 
-                <!-- Recurring Option -->
                 <div class="bg-gradient-to-br from-purple-50 to-blue-50 p-4 rounded-xl border border-purple-200">
                     <div class="flex items-start">
                         <input type="checkbox" id="isRecurring" name="isRecurring" value="true" checked
@@ -320,7 +397,6 @@
                     </div>
                 </div>
 
-                <!-- Date Range (Non-recurring) -->
                 <div id="dateRangeFields" class="hidden space-y-4 bg-blue-50 p-4 rounded-xl border border-blue-200">
                     <p class="text-sm text-blue-700 font-semibold mb-3 flex items-center">
                         <i class="fas fa-info-circle mr-2"></i>
@@ -348,7 +424,6 @@
                 </div>
             </div>
 
-            <!-- Actions -->
             <div class="flex justify-end space-x-3 mt-8 pt-6 border-t border-gray-200">
                 <button type="button" onclick="closeAddAvailabilityModal()"
                         class="px-6 py-3 border-2 border-gray-300 rounded-xl text-gray-700 font-semibold hover:bg-gray-50 transition-all">
@@ -387,363 +462,33 @@
     </div>
 </div>
 
-<!-- FullCalendar -->
-<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
-<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/fr.js'></script>
+<!-- Initialize availabilities data for JavaScript -->
 <script>
-    let deleteAvailabilityId = null;
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const isRecurringCheckbox = document.getElementById('isRecurring');
-        const dateRangeFields = document.getElementById('dateRangeFields');
-        const startDateInput = document.getElementById('startDate');
-        const endDateInput = document.getElementById('endDate');
-        const form = document.getElementById('availabilityForm');
-        const modalError = document.getElementById('modalError');
-        const modalErrorText = document.getElementById('modalErrorText');
-        const modalErrorTitle = document.getElementById('modalErrorTitle');
-
-        const today = new Date().toISOString().split('T')[0];
-        startDateInput.min = today;
-        endDateInput.min = today;
-
-        function showError(message, fieldType = 'general') {
-            modalErrorTitle.textContent = getErrorTitle(fieldType);
-            modalErrorText.textContent = message;
-            modalError.classList.remove('hidden');
-            highlightErrorField(fieldType);
-            setTimeout(() => {
-                modalError.classList.add('hidden');
-                clearErrorHighlights();
-            }, 8000);
-        }
-
-        function getErrorTitle(fieldType) {
-            const titles = {
-                'time': 'Erreur de plage horaire :',
-                'date': 'Erreur de dates :',
-                'recurring': 'Erreur de récurrence :',
-                'overlap': 'Conflit de disponibilité :',
-                'general': 'Erreur :'
-            };
-            return titles[fieldType] || titles.general;
-        }
-
-        function highlightErrorField(fieldType) {
-            const fieldSelectors = {
-                'time': ['.startTime-field', '.endTime-field'],
-                'date': ['.startDate-field', '.endDate-field'],
-                'recurring': ['.isRecurring-field'],
-                'day': ['.dayOfWeek-field']
-            };
-            const selectors = fieldSelectors[fieldType];
-            if (selectors) {
-                selectors.forEach(selector => {
-                    document.querySelectorAll(selector).forEach(field => {
-                        field.classList.add('validation-error');
-                    });
-                });
-            }
-        }
-
-        function clearErrorHighlights() {
-            document.querySelectorAll('.validation-error').forEach(field => {
-                field.classList.remove('validation-error');
-            });
-        }
-
-        function hideAllErrors() {
-            modalError.classList.add('hidden');
-            document.querySelectorAll('[id$="Error"]').forEach(el => el.classList.add('hidden'));
-            clearErrorHighlights();
-        }
-
-        function toggleDateFields() {
-            const isRecurring = isRecurringCheckbox.checked;
-            if (isRecurring) {
-                dateRangeFields.classList.add('hidden');
-                startDateInput.removeAttribute('required');
-                endDateInput.removeAttribute('required');
-                startDateInput.value = '';
-                endDateInput.value = '';
-            } else {
-                dateRangeFields.classList.remove('hidden');
-                startDateInput.setAttribute('required', 'required');
-                endDateInput.setAttribute('required', 'required');
-            }
-        }
-
-        isRecurringCheckbox.addEventListener('change', toggleDateFields);
-
-        function validateTimeOrder() {
-            const startTime = document.getElementById('startTime').value;
-            const endTime = document.getElementById('endTime').value;
-            if (startTime && endTime && startTime >= endTime) {
-                document.getElementById('timeOrderError').classList.remove('hidden');
-                return false;
-            } else {
-                document.getElementById('timeOrderError').classList.add('hidden');
-                return true;
-            }
-        }
-
-        function validateDateOrder() {
-            const startDate = startDateInput.value;
-            const endDate = endDateInput.value;
-            if (startDate && endDate && new Date(endDate) < new Date(startDate)) {
-                document.getElementById('dateOrderError').classList.remove('hidden');
-                return false;
-            } else {
-                document.getElementById('dateOrderError').classList.add('hidden');
-                return true;
-            }
-        }
-
-        document.getElementById('startTime').addEventListener('change', validateTimeOrder);
-        document.getElementById('endTime').addEventListener('change', validateTimeOrder);
-        startDateInput.addEventListener('change', validateDateOrder);
-        endDateInput.addEventListener('change', validateDateOrder);
-
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            hideAllErrors();
-
-            const dayOfWeek = document.getElementById('dayOfWeek').value;
-            const startTime = document.getElementById('startTime').value;
-            const endTime = document.getElementById('endTime').value;
-            const isRecurring = isRecurringCheckbox.checked;
-            const startDate = startDateInput.value;
-            const endDate = endDateInput.value;
-
-            let hasError = false;
-
-            if (!dayOfWeek) {
-                document.getElementById('dayOfWeekError').classList.remove('hidden');
-                showError('Veuillez sélectionner un jour de la semaine', 'day');
-                hasError = true;
-            }
-
-            if (!startTime) {
-                document.getElementById('startTimeError').classList.remove('hidden');
-                showError('Veuillez saisir une heure de début', 'time');
-                hasError = true;
-            }
-
-            if (!endTime) {
-                document.getElementById('endTimeError').classList.remove('hidden');
-                showError('Veuillez saisir une heure de fin', 'time');
-                hasError = true;
-            }
-
-            if (startTime && endTime && startTime >= endTime) {
-                document.getElementById('timeOrderError').classList.remove('hidden');
-                showError('L\'heure de fin doit être après l\'heure de début', 'time');
-                hasError = true;
-            }
-
-            if (!isRecurring) {
-                if (!startDate) {
-                    document.getElementById('startDateError').classList.remove('hidden');
-                    showError('Veuillez sélectionner une date de début', 'date');
-                    hasError = true;
-                }
-
-                if (!endDate) {
-                    document.getElementById('endDateError').classList.remove('hidden');
-                    showError('Veuillez sélectionner une date de fin', 'date');
-                    hasError = true;
-                }
-
-                if (startDate && endDate && new Date(endDate) < new Date(startDate)) {
-                    document.getElementById('dateOrderError').classList.remove('hidden');
-                    showError('La date de fin doit être après la date de début', 'date');
-                    hasError = true;
-                }
-            }
-
-            if (!hasError) {
-                form.submit();
-            }
-        });
-
-        const calendarEl = document.getElementById('calendar');
-        const calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'timeGridWeek',
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'timeGridWeek,timeGridDay'
-            },
-            locale: 'fr',
-            allDaySlot: false,
-            slotMinTime: "06:00:00",
-            slotMaxTime: "22:00:00",
-            slotDuration: '00:30:00',
-            height: 'auto',
-            events: [
-                <c:forEach var="availability" items="${availabilities}" varStatus="status">
-                <c:if test="${availability.available}">
-                {
-                    id: '${availability.id}',
-                    title: 'Disponible',
-                    <c:choose>
-                    <c:when test="${availability.recurring}">
-                    daysOfWeek: [${availability.dayOfWeek}],
-                    startTime: '${availability.startTime}',
-                    endTime: '${availability.endTime}',
-                    startRecur: '2024-01-01',
-                    </c:when>
-                    <c:otherwise>
-                    start: '${availability.startDate}T${availability.startTime}',
-                    end: '${availability.endDate}T${availability.endTime}',
-                    </c:otherwise>
-                    </c:choose>
-                    backgroundColor: '#8b5cf6',
-                    borderColor: '#8b5cf6',
-                    textColor: 'white',
-                    extendedProps: {
-                        availabilityId: '${availability.id}',
-                        isRecurring: ${availability.recurring},
-                        startTime: '${availability.startTime}',
-                        endTime: '${availability.endTime}'
-                    }
-                }<c:if test="${!status.last}">,</c:if>
-                </c:if>
-                </c:forEach>
-            ],
-            eventClick: function(info) {
-                deleteAvailabilityId = info.event.extendedProps.availabilityId;
-                const isRecurring = info.event.extendedProps.isRecurring;
-
-                const messageEl = document.getElementById('deleteMessage');
-                if (isRecurring) {
-                    messageEl.innerHTML = `
-                        <span class="block mb-2">Cette disponibilité est <strong>récurrente</strong>.</span>
-                        <span class="block text-sm">Elle sera supprimée pour toutes les semaines.</span>
-                    `;
-                } else {
-                    const startDate = info.event.start ?
-                        info.event.start.toLocaleDateString('fr-FR') : '';
-                    const endDate = info.event.end ?
-                        info.event.end.toLocaleDateString('fr-FR') : '';
-                    messageEl.innerHTML = `
-                        <span class="block mb-2">Cette disponibilité sera supprimée.</span>
-                        <span class="block text-sm text-gray-500">Du ${startDate} au ${endDate}</span>
-                    `;
-                }
-
-                openDeleteModal();
-            },
-            eventContent: function(arg) {
-                const isRecurring = arg.event.extendedProps.isRecurring;
-                const startTime = arg.event.extendedProps.startTime;
-                const endTime = arg.event.extendedProps.endTime;
-
-                let iconHtml = isRecurring ?
-                    '<i class="fas fa-repeat text-xs"></i>' :
-                    '<i class="fas fa-calendar text-xs"></i>';
-
-                return {
-                    html: `
-                        <div class="px-2 py-1">
-                            <div class="flex items-center justify-between mb-1">
-                                <span class="font-semibold text-sm flex items-center gap-1">
-                                    <i class="fas fa-user-md"></i>
-                                    Disponible
-                                </span>
-                                ${iconHtml}
-                            </div>
-                            <div class="text-xs opacity-90">
-                                ${startTime} - ${endTime}
-                            </div>
-                        </div>
-                    `
-                };
-            },
-            eventDidMount: function(info) {
-                info.el.style.cursor = 'pointer';
-                info.el.style.transition = 'all 0.2s ease';
-
-                info.el.addEventListener('mouseenter', function() {
-                    this.style.transform = 'scale(1.02)';
-                    this.style.boxShadow = '0 4px 12px rgba(139, 92, 246, 0.4)';
-                });
-
-                info.el.addEventListener('mouseleave', function() {
-                    this.style.transform = 'scale(1)';
-                    this.style.boxShadow = 'none';
-                });
-            }
-        });
-
-        calendar.render();
-        toggleDateFields();
+    // Parse availabilities from JSP and pass to external script
+    const availabilitiesData = [];
+    <c:forEach var="availability" items="${availabilities}">
+    <c:if test="${availability.available}">
+    availabilitiesData.push({
+        id: '${availability.id}',
+        dayOfWeek: ${availability.dayOfWeek},
+        startTime: '${availability.startTime}',
+        endTime: '${availability.endTime}',
+        recurring: ${availability.recurring},
+        startDate: '${not empty availability.startDate ? availability.startDate : ""}',
+        endDate: '${not empty availability.endDate ? availability.endDate : ""}',
+        available: true
     });
+    </c:if>
+    </c:forEach>
+</script>
 
-    function openAddAvailabilityModal() {
-        const modal = document.getElementById('addAvailabilityModal');
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-        document.getElementById('modalError').classList.add('hidden');
-        document.querySelectorAll('[id$="Error"]').forEach(el => el.classList.add('hidden'));
-        document.querySelectorAll('.validation-error').forEach(field => {
-            field.classList.remove('validation-error');
-        });
-    }
+<!-- Include external JavaScript file -->
+<script src="${pageContext.request.contextPath}/assets/js/hook.js"></script>
 
-    function closeAddAvailabilityModal() {
-        const modal = document.getElementById('addAvailabilityModal');
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-        document.getElementById('availabilityForm').reset();
-        document.getElementById('isRecurring').checked = true;
-        document.getElementById('modalError').classList.add('hidden');
-        document.querySelectorAll('[id$="Error"]').forEach(el => el.classList.add('hidden'));
-        document.querySelectorAll('.validation-error').forEach(field => {
-            field.classList.remove('validation-error');
-        });
-        const event = new Event('change');
-        document.getElementById('isRecurring').dispatchEvent(event);
-    }
-
-    function openDeleteModal() {
-        const modal = document.getElementById('deleteModal');
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-    }
-
-    function closeDeleteModal() {
-        const modal = document.getElementById('deleteModal');
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-        deleteAvailabilityId = null;
-    }
-
-    function confirmDelete() {
-        if (deleteAvailabilityId) {
-            window.location.href = '${pageContext.request.contextPath}/doctor/availabilities/delete?id=' + deleteAvailabilityId;
-        }
-    }
-
-    document.getElementById('addAvailabilityModal').addEventListener('click', function(e) {
-        if (e.target === this) {
-            closeAddAvailabilityModal();
-        }
-    });
-
-    document.getElementById('deleteModal').addEventListener('click', function(e) {
-        if (e.target === this) {
-            closeDeleteModal();
-        }
-    });
-
-    // Keyboard shortcuts
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeAddAvailabilityModal();
-            closeDeleteModal();
-        }
-    });
+<!-- Initialize after external script loads -->
+<script>
+    // Initialize availabilities with data from JSP
+    initAvailabilities(availabilitiesData);
 </script>
 
 </body>

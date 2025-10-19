@@ -23,7 +23,6 @@ public class AvailabilityService {
                 return error;
             }
 
-            System.out.println("🔍 [Service] Doctor ID: " + availability.getDoctor().getId());
 
             if (availability.getDayOfWeek() < 1 || availability.getDayOfWeek() > 7) {
                 String error = "Jour de la semaine invalide. Doit être entre 1 (Lundi) et 7 (Dimanche).";
@@ -40,7 +39,6 @@ public class AvailabilityService {
                 return error;
             }
 
-            System.out.println("🔍 [Service] Appel à repository.save()...");
             String error = availabilityRepository.save(availability);
 
             if (error == null) {
@@ -56,16 +54,13 @@ public class AvailabilityService {
         }
     }
 
-
     public void updateAvailability(Availability availability) {
         availabilityRepository.update(availability);
     }
 
-
     public List<Availability> getDoctorAvailabilities(UUID doctorId) {
         return availabilityRepository.findByDoctorId(doctorId);
     }
-
 
     public void deactivateAvailability(UUID availabilityId) {
         Availability availability = availabilityRepository.findById(availabilityId);
@@ -75,8 +70,27 @@ public class AvailabilityService {
         }
     }
 
-
     public void deleteAvailability(UUID availabilityId) {
-        availabilityRepository.delete(availabilityId);
+        try {
+            availabilityRepository.delete(availabilityId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erreur lors de la suppression de la disponibilité", e);
+        }
+    }
+
+
+    public boolean belongsToDoctor(UUID availabilityId, UUID doctorId) {
+        Availability availability = availabilityRepository.findById(availabilityId);
+        if (availability == null) {
+            return false;
+        }
+        boolean belongs = availability.getDoctor().getId().equals(doctorId);
+        return belongs;
+    }
+
+
+    public Availability getAvailabilityById(UUID availabilityId) {
+        return availabilityRepository.findById(availabilityId);
     }
 }

@@ -49,10 +49,7 @@ public class AvailabilityRepository {
             if (transaction != null) {
                 transaction.rollback();
             }
-            String error = "Erreur technique lors de l'enregistrement : " + e.getMessage();
-            System.err.println(" [Repository] " + error);
-            e.printStackTrace();
-            return error;
+            throw new IllegalArgumentException("Erreur technique lors de l'enregistrement: " + e.getMessage());
         }
     }
 
@@ -129,7 +126,15 @@ public class AvailabilityRepository {
 
     public Availability findById(UUID id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.find(Availability.class, id);
+            Availability availability = session.find(Availability.class, id);
+            if (availability == null) {
+                throw new IllegalArgumentException("Aucune disponibilité trouvée avec l'ID: " + id);
+
+            }
+            return availability;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -137,14 +142,23 @@ public class AvailabilityRepository {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            Availability availability = session.find(Availability.class, id);
-            if (availability != null) {
-                session.remove(availability);
-            }
+
+
+            String hql = "DELETE FROM Availability a WHERE a.id = :id";
+            int result = session.createMutationQuery(hql)
+                    .setParameter("id", id)
+                    .executeUpdate();
+
             transaction.commit();
+
+
+            if (result == 0) {
+                throw new IllegalArgumentException("Aucune disponibilité trouvée avec l'ID: " + id);
+            }
+
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
-            e.printStackTrace();
+            throw new RuntimeException("Erreur suppression: " + e.getMessage(), e);
         }
     }
 }
