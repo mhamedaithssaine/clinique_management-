@@ -161,7 +161,7 @@ L’application automatise la **planification des rendez-vous**, facilite le **s
 ### ⚙️ Étapes
 ```bash
 # 1. Cloner le projet
-git clone https://github.com/<user>/clinic-management-system.git
+git clone https://github.com/mhamedaithssaine/clinique_management-.git
 
 # 2. Ouvrir le projet dans IntelliJ / Eclipse
 
